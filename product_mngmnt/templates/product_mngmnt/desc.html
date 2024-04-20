@@ -1,0 +1,26 @@
+{% extends 'product_mngmnt/base.html' %}
+{% load static %}
+
+{% block title %}
+    {{prod.name}}
+{% endblock title %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{% static 'css/desc.css' %}">
+
+{% endblock extracss %}
+{% block body %}
+
+    <div class="containerdesc">
+        <div class="col" id="desc">
+            <img src="https://paslaundry.in/{{prod.image.url}}"  alt="">
+        </div>
+        <div class="col" id="desc">
+            <h1>{{prod.name}}</h1>
+            {{prod.detail|safe}}
+             {% comment %} <p>{{prod.detail}}</p> {% endcomment %}
+            <h4> FOR PRICE !! </h4>
+            <button><a href="https://wa.me/+919650712233?text=I am interested in buying {{prod.name}}." id="cardbtn" >Enquire Now !</a></button>
+        </div>
+    </div>
+    {% endblock body %}

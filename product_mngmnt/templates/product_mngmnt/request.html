@@ -1,0 +1,68 @@
+{% extends 'product_mngmnt/base.html' %}
+{% load static %}
+
+{% if section == marking %}
+
+
+{% block title %}{{section}}
+{% endblock title %}
+
+
+{% block head %}<link rel="shortcut icon" href='/media/images/logoPAS.png' type="image/x-icon------">{% endblock head %}
+
+{% elif section is none %}
+
+
+
+{% endif %}
+
+{% block body %}
+        {{section}}
+        <div class="cards">
+
+
+            {% for product in prod %}
+
+
+            <!-- <h1>{{product.name}}</h1>
+            <img src="{{product.image.url}}" alt="Pic" srcset=""> -->
+            
+            <!-- {{product.image}} -->
+
+            <div class="card">
+                <div class="innercard">
+                  <a href="/desc/{{product.id}}"><img src="http://127.0.0.1:8000/{{product.image}}" alt="" srcset=""></a>
+                </div>
+                <div class="innercard">
+                  <h4>{{product.name}}</h4>
+                  <h5 align="center" style="margin: 5px;">For Price !</h5>
+                  <button><a href="https://wa.me/+919650712233?text=I am interested in buying {{product.name}}.">Enquire now!!</a></button>
+                </div>  
+              </div>
+
+
+            <!-- <div class="card" style="width: 18rem;">
+                <a href="/desc/{{product.id}}"> <img src="http://127.0.0.1:8000/{{product.image.url}}" class="card-img-top" width="200px" height="200px" alt="..."></a>
+                <div class="card-body">
+                    <h6 class="card-title">{{product.name}}</h6>
+                    <a href="https://wa.me/+919999284429?text=I am interested in your service." id="cardbtn" class="btn btn-primary">Enquire Now !</a>
+                </div>
+            </div> -->
+
+            {% empty %}
+            <!-- <div class="for_empty">
+                <h5>Try again !</h5>
+            </div>         -->
+            <div class="alert alert-primary" role="alert">
+                Please Try Again !
+            </div>
+            {% endfor %}
+
+            
+            
+          </div class="extended">
+            <h3 align="center">For More Such Products contact us at <a href=" https://wa.me/+919650712233?text=I am interested in your service. "><img src="{% static 'images/WhatsApp.svg.png' %}" width="50px" height="50px" alt="Whatsapp" srcset=""></a> </h3>
+            
+          </div>
+
+{% endblock body %}

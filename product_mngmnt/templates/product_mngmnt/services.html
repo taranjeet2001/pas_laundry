@@ -1,0 +1,29 @@
+{% extends 'product_mngmnt/base.html' %}
+{% load static %}
+{% block head %}
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% endblock head %}
+{% block title %}services{% endblock title %}
+
+{% block body %}
+
+<div class="service">
+<img src="{% static 'images/Service_Card_1570_-removebg-preview (1).png' %}"  alt="">
+
+<h1>ONE CALL ...  SOLVES IT ALL </h1>
+<h3><a href="tel:+919650712233">
+    Call US : +91-9650712233</a></h3>
+    <h3>
+        <a href="mailto:enquiry@paslaundry.in?subject = Enquiry for Product&body = I am interested in your service"> Email US : enquiry@paslaundry.in </a>
+    </h3>
+</div>
+{% comment %} <div class="imagescontact">
+<a href="https://wa.me/+919650712233?text=I am interested in your service."> <img src="{% static 'images/WhatsApp.svg.png' %}" alt="" srcset=""> </a>
+    <a href = "mailto:enquiry@pasev.in?subject = Enquiry for Product&body = I am interested in your service">
+       Email us : enquiry@pasev.in
+    </a> {% endcomment %}
+</div>    
+{% endblock body %}
+
+
+

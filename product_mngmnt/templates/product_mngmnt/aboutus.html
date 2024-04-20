@@ -1,0 +1,38 @@
+{% extends 'product_mngmnt/base.html' %}
+{% load static %}
+
+{% block extracss %}
+<link rel="stylesheet" href="{% static 'desc.css' %}">
+
+{% endblock extracss %}
+{% block body %}
+
+
+<div class="about">
+    <div>
+        <img src="{% static 'images/logoPAS.png' %}" width="150px" height="150px">
+    </div>
+    <div class="innerabout">
+        <h1>PAS DISTRIBUTORS </h1>
+        <h2> <i> Surpassing Exceptions </i></h2>
+        <p>We are a team of proactive, passionate and committed professionals aiming at Laundry Solutions and Services .</p>
+    </div>
+    <div class="innerabout">
+        <h1>SONEAL ABROL </h1>
+        <h2>Founder And CEO </h2>
+        <p>Soneal Abrol , having an experience ranging for over a decade in Laundry Industry known for his commitment and meeting deadlines is all set to take PAS Distributers to greater heights .</p>
+    </div>
+    <div class="innerabout">
+        <h1>Our Work</h1>
+        <p>Our Laundry convenience store ensures supply of the following at highly competitive rates and best quality standards : </p>
+    </div>
+    <div class="inneraboutli">
+        <li>Laundry equipments</li>
+        <li>Spare parts</li>
+        <li>Laundry consumables</li>
+        <li>Maintenance Services</li>
+    </div>
+</div>
+
+
+{% endblock body %}

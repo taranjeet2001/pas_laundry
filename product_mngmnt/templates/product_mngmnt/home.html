@@ -1,0 +1,85 @@
+{% extends 'product_mngmnt/base.html' %}
+{% load static %}
+{% block body %}
+
+    
+
+    <img src="{% static 'images/landing page[1573].jpg' %}" width="100%" alt="" srcset="">
+
+    <div class="maincontainer">
+        <div class="inner2">
+            <div class="prods"><a href="{% url 'speedqueen' %}"><img src="{% static 'images/Speed Queen Card[1563].jpg'%}" alt="" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'flat_work_ironer' %}"><img src="{% static 'images/Ironer Card[1565].jpg'%}" alt="" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'pads_and_covers' %}"><img src="{% static 'images/Press Padding Card[1564].jpg'%}" alt="" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'marking' %}"><img src="{% static 'images/Marking Tape Card[1567].jpg'%}" alt="" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'washerextractor' %}"><img src="{% static 'images/equipment Card[1566].jpg'%}" alt="" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'services' %}"><img src="{% static 'images/Service Card[1570].jpg' %}" alt=""></a></div>
+        </div>
+        <div class="inner1">
+            <img src="{% static 'images/logoPAS.png' %}" width="60px" height="60px" alt="" srcset="">
+            <p>We are distributors of spare parts catering to the laundry industry. Our mission is to help you get your machines back in-service both quickly and cost effectively. </p>
+            <p>We offer genuine OEM/Original and Replacement laundry parts for top brands such as Milnor, ADC, Alliance, Primus, Speed Queen,  IPSO, Union, Sidi Mondial .</p>
+            <p>We have an experience in providing solutions in the laundry industry for over a  decade. 
+              We carry a lot of knowledge and have a highly trained staff that can help you with all your questions. We have developed this convenience store to make it easy for you to find the spare parts you need for your washers and dryers. 
+            </p>
+            <p>We strive to always provide our customers with the best service and the highest quality parts at great prices.
+            </p>
+        </div>
+    </div>
+    <div class="visitor">
+    <div class="form-container">
+        <h2>Get in touch with us</h2>
+        <h2>We will try to serve you better</h2>
+        <form method="post">
+        {% csrf_token %}
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="txtname" placeholder="Your name" required>
+    
+          <label for="mobile">Mobile Number:</label>
+          <input type="tel" id="mobile" name="txtmobile" placeholder="Your mobile number" required>
+    
+          <input type="button" onclick= "savedata()" value="Submit" name="btnVisitor">
+        </form>
+      </div>
+    </div>  
+
+
+    <!-- <div class="popup-container">
+        <div class="popup-content">
+            <a href="{% url 'marking' %}">
+              <img src="{% static 'images/Marking Tape Discount Banner[1590].jpg' %}" alt="Popup Image" class="popup-image"></a>
+            <span class="close-button">&times;</span>
+        </div>
+    </div>  -->
+
+
+    <script>
+      function savedata(){
+        let name = document.getElementById('name').value
+        let mobileno = document.getElementById('mobile').value
+        // let csr = $("input[name=csrfmiddlewaretoken").val();
+        // console.log(name,mobileno)
+        let data = {
+          name : name,
+          mobileno : mobileno
+        };
+        $.ajax({
+          url : "{% url 'savedata' %}",
+          method : "POST",
+          data : data,
+          dataType : "json",
+          success : function(data){
+            if(data.status == 'Save'){
+              console.log(data.status);
+              document.querySelector(".form-container").innerHTML='<h2 align="center">Thankyou for your response !!!</h2>';
+            }
+            else{
+              console.log(data.status)
+            }
+          }
+        })
+      }
+    </script>
+
+    
+{% endblock body %}
