@@ -1,0 +1,4 @@
+user-agent: googlebot
+Allow: /
+
+Sitemap :https://paslaundry.in/sitemap_index.xml

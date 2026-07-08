@@ -1,0 +1,51 @@
+{% extends 'product_mngmnt/base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block body %}
+
+    
+
+    <img src="{% static 'images/landing page sample-min.jpg' %}" width="100%" alt="Pas laundry" srcset="">
+
+    <div class="maincontainer">
+        <div class="inner2">
+            <div class="prods"><a href="{% url 'speedqueen' %}"><img src="{% static 'images/Speed Queen Card[2017].jpg'%}" alt="Speed Queen Parts" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'flat_work_ironer' %}"><img src="{% static 'images/Ironer Card-min.jpg'%}" alt="Ironer" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'pads_and_covers' %}"><img src="{% static 'images/Press Padding Card[2018].jpg'%}" alt="Press Padding" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'marking' %}"><img src="{% static 'images/Thermopatch[2015].jpg'%}" alt="Marking tape" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'washerextractor' %}"><img src="{% static 'images/equipment Card[2016].jpg'%}" alt="Equipments" srcset=""></a></div>
+            <div class="prods"><a href="{% url 'image' %}"><img src="{% static 'images/Image[1989].jpg' %}" alt="services"></a></div>
+        </div>
+        <div class="inner1">
+            <img src="{% static 'images/logoPAS.png' %}" width="60px" height="60px" alt="PAS laundry" srcset="">
+            <p>We are distributors of spare parts catering to the laundry industry. Our mission is to help you get your machines back in-service both quickly and cost effectively. </p>
+            <p>We offer genuine OEM/Original and Replacement laundry parts for top brands such as Milnor, ADC, Alliance, Primus, Speed Queen,  IPSO, Union, Sidi Mondial .</p>
+            <p>We have an experience in providing solutions in the laundry industry for over a  decade. 
+              We carry a lot of knowledge and have a highly trained staff that can help you with all your questions. We have developed this convenience store to make it easy for you to find the spare parts you need for your washers and dryers. 
+            </p>
+            <p>We strive to always provide our customers with the best service and the highest quality parts at great prices.
+            </p>
+        </div>
+    </div>
+    <div class="visitor">
+    <div class="form-container">
+        <h2>Get in touch with us</h2>
+        <h2>We will try to serve you better</h2>
+        <form method="post">
+        {% csrf_token %}
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="txtname" placeholder="Your name" required>
+    
+          <label for="mobile">Mobile Number:</label>
+          <input type="tel" id="mobile" name="txtmobile" placeholder="Your mobile number" required>
+    
+          <input type="submit" value="Submit" name="btnVisitor">
+        </form>
+      </div>
+    </div>  
+
+
+    
+
+    
+{% endblock body %}
