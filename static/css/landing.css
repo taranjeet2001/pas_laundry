@@ -214,6 +214,69 @@ body{
     color: black;
  }
 
+.announcement-banner{
+    background-color: #fff;
+    border-top: 2px solid #dfefff;
+    border-bottom: 2px solid #dfefff;
+    width: 100vw;
+    max-width: 99.85%;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.announcement-banner-link{
+    position: relative;
+    display: block;
+    color: #0c65a3;
+    text-decoration: none;
+    padding: 10px 16px;
+    overflow: hidden;
+}
+
+.announcement-banner-track{
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    width: max-content;
+    animation: pas-laundry-marquee 24s linear infinite;
+    will-change: transform;
+}
+
+.announcement-banner-track span{
+    flex: none;
+    padding-right: 48px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.announcement-banner-hover{
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    font-size: 20px;
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+    text-align: center;
+}
+
+.announcement-banner:hover .announcement-banner-track{
+    opacity: 0;
+}
+
+.announcement-banner:hover .announcement-banner-hover{
+    opacity: 1;
+}
+
+@keyframes pas-laundry-marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-25%); }
+}
+
+
 
  /* .searching input:hover{
     box-shadow: 5px blue;
