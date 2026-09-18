@@ -106,18 +106,11 @@
             <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content">
-            <a href="{% url 'adc_parts' %}">ADC Parts</a>
-            <a href="{% url 'drainvalve' %}">Dependo Drain Valve</a>
-            <a href="{% url 'drycleaning' %}">Dry Cleaning Parts</a>
-            <a href="{% url 'forenta' %}">Forenta Parts</a>
-            <a href="{% url 'hoffman' %}">Hoffman Parts</a>
-            <a href="{% url 'image' %}">Image Parts</a>
-            <a href="{% url 'LGparts' %}">LG Spare Parts</a>
-            <a href="{% url 'milnor' %}">Milnor Parts</a>
-            <a href="{% url 'pony_sidi_parts' %}">Pony/Sidi Parts</a>
-            <a href="{% url 'speedqueen' %}">Speed Queen Parts</a>
-            <a href="{% url 'thermopatch' %}">Thermopatch</a>
-            <a href="{% url 'Miscellaneous' %}">Miscellaneous Parts</a>
+            {% for brand in brand_menu %}
+              <a href="{% url 'home' %}?brand={{ brand|urlencode }}">{{ brand }}</a>
+            {% empty %}
+              <a href="{% url 'home' %}">No brands available</a>
+            {% endfor %}
           </div>
         </div>
 

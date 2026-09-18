@@ -11,6 +11,20 @@ from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
+
+def _normalize_brand_name(brand_name):
+    return " ".join((brand_name or "").split())
+
+
+def _render_brand_products(request, brand_name, section_label=None):
+    brand = _normalize_brand_name(brand_name)
+    section = section_label or f"{brand} Parts"
+    prod = (
+        Product.objects.filter(brand__iexact=brand, detail__icontains="part")
+        .order_by("name")
+    )
+    return render(request, "product_mngmnt/request.html", context={"prod": prod, "section": section})
+
 def view_index(request):
     return render(request, 'product_mngmnt/index.html')
 
@@ -87,6 +101,9 @@ def view_forget(request):
 
 def view_home(request):
     if request.method == 'GET':
+        brand_name = _normalize_brand_name(request.GET.get("brand", ""))
+        if brand_name:
+            return _render_brand_products(request, brand_name, f"{brand_name} Parts")
         return render(request,'product_mngmnt/home.html')
     elif request.method == 'POST':
         tofind = request.POST.get('search','NA')
@@ -165,27 +182,19 @@ def view_speedqueen(request):
 # @login_required(login_url='login')    
 def view_thermopatch(request):
     if request.method == 'GET':
-        section = "Thermopatch"
-        prod=Product.objects.filter(detail__contains="thermopatch")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+        return _render_brand_products(request, "Thermopatch", "Thermopatch Parts")
 
 def view_pony_sidi_parts(request):
     if request.method == 'GET':
-        section = "Pony/Sidi Parts"
-        prod=Product.objects.filter(detail__contains="Pony/Sidi")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+        return _render_brand_products(request, "Pony/Sidi", "Pony/Sidi Parts")
 
 def view_miscellaneous(request):
     if request.method == 'GET':
-        section = "Miscellaneous"
-        prod=Product.objects.filter(detail__contains="miscellaneous")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+        return _render_brand_products(request, "Miscellaneous", "Miscellaneous Parts")
 
 def view_adc_parts(request):
     if request.method == 'GET':
-        section = "ADC Parts"
-        prod=Product.objects.filter(detail__contains="adc")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+        return _render_brand_products(request, "ADC", "ADC Parts")
     
 def view_image(request):
     if request.method == 'GET':
@@ -195,30 +204,22 @@ def view_image(request):
     
 def view_LGparts(request):
     if request.method == 'GET':
-        section = "LG spare parts"
-        prod=Product.objects.filter(detail__contains="LG parts")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+        return _render_brand_products(request, "LG", "LG Spare Parts")
 
 # @login_required(login_url='login')    
 def view_forenta_parts(request):
     if request.method == 'GET':
-        section = "Forenta Parts"
-        prod=Product.objects.filter(detail__contains="forenta parts")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+        return _render_brand_products(request, "Forenta", "Forenta Parts")
 
 # @login_required(login_url='login')    
 def view_hoffman_parts(request):
     if request.method == 'GET':
-        section = "Hoffman Parts"
-        prod=Product.objects.filter(detail__contains="hoffman parts")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+        return _render_brand_products(request, "Hoffman", "Hoffman Parts")
 
 # @login_required(login_url='login')    
 def view_milnor_parts(request):
     if request.method == 'GET':
-        section = "Milnor Parts"
-        prod=Product.objects.filter(detail__contains="milnor parts")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+        return _render_brand_products(request, "Milnor", "Milnor Parts")
 
 # Equipment dropdown view 
 
