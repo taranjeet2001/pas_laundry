@@ -144,12 +144,15 @@
         </div>
 
         <div class="dropdown">
-          <button class="dropbtn">Kitchen
+          <button class="dropbtn">Washer Controller
             <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content">
-            <a href="{% url 'kitchenparts' %}">Kitchen Parts</a>
-            <a href="{% url 'kitchenapp' %}">Kitchen Accessories</a>
+            {% for brand in washer_controller_menu %}
+              <a href="{% url 'home' %}?washer_controller={{ brand|urlencode }}">{{ brand }}</a>
+            {% empty %}
+              <a href="{% url 'home' %}">No washer controllers available</a>
+            {% endfor %}
           </div>
         </div>
 
