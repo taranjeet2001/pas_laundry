@@ -38,3 +38,12 @@ def consumable_menu(request):
         .exclude(brand__exact="")
     )
     return {"consumable_menu": _unique_brand_list(consumables_queryset)}
+
+
+def washer_controller_menu(request):
+    washer_controller_queryset = (
+        Product.objects.filter(detail__icontains="washer controller")
+        .exclude(brand__isnull=True)
+        .exclude(brand__exact="")
+    )
+    return {"washer_controller_menu": _unique_brand_list(washer_controller_queryset)}
