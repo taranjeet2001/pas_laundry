@@ -2,7 +2,6 @@ from django.shortcuts import render,redirect
 from product_mngmnt.models import *
 from django.http import HttpResponse
 from django.http import JsonResponse
-from .urls import *
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
@@ -13,34 +12,119 @@ from django.db.models import Q
 # Create your views here.
 
 
+class ProductCatalog:
+    """
+    Domain service implementing Single Responsibility Principle (SRP)
+    for querying, filtering, and ordering products cleanly.
+    """
+
+    @staticmethod
+    def normalize_name(value):
+        """Clean and normalize whitespace in names and brand strings."""
+        return " ".join((value or "").split())
+
+    @classmethod
+    def get_brand_parts(cls, brand_name):
+        """Fetch parts specific to a brand."""
+        brand = cls.normalize_name(brand_name)
+        return (
+            Product.objects.filter(brand__iexact=brand, detail__icontains="part")
+            .order_by("name")
+        )
+
+    @classmethod
+    def get_brand_consumables(cls, brand_name):
+        """Fetch consumables specific to a brand."""
+        brand = cls.normalize_name(brand_name)
+        return (
+            Product.objects.filter(brand__iexact=brand)
+            .filter(
+                Q(detail__icontains="consumable")
+                | Q(detail__icontains="marking")
+                | Q(detail__icontains="pads")
+                | Q(detail__icontains="flat")
+            )
+            .order_by("name")
+        )
+
+    @classmethod
+    def get_brand_washer_controllers(cls, brand_name):
+        """Fetch washer controller products specific to a brand."""
+        brand = cls.normalize_name(brand_name)
+        return (
+            Product.objects.filter(
+                brand__iexact=brand,
+                detail__icontains="washer controller",
+            )
+            .order_by("name")
+        )
+
+    @classmethod
+    def get_washer_controllers(cls, brand=None):
+        """Fetch washer controller products, optionally filtered by brand."""
+        qs = Product.objects.filter(detail__icontains="washer controller")
+        if brand:
+            clean_brand = cls.normalize_name(brand)
+            if clean_brand:
+                qs = qs.filter(brand__iexact=clean_brand)
+        return qs.order_by("name")
+
+    @classmethod
+    def filter_by_keywords(cls, *keywords, brand=None):
+        """
+        Query products matching one or more detail keywords (case-insensitive OR).
+        Optionally filters by brand.
+        """
+        if not keywords:
+            qs = Product.objects.all()
+        else:
+            query = Q()
+            for kw in keywords:
+                cleaned = (kw or "").strip()
+                if cleaned:
+                    query |= Q(detail__icontains=cleaned)
+            qs = Product.objects.filter(query)
+
+        if brand:
+            clean_brand = cls.normalize_name(brand)
+            if clean_brand:
+                qs = qs.filter(brand__iexact=clean_brand)
+
+        return qs.order_by("name")
+
+
+def _render_catalog_response(request, section, queryset):
+    """Render standard catalog response to adhere to DRY."""
+    return render(
+        request,
+        "product_mngmnt/request.html",
+        context={"prod": queryset, "section": section},
+    )
+
+
 def _normalize_brand_name(brand_name):
-    return " ".join((brand_name or "").split())
+    return ProductCatalog.normalize_name(brand_name)
 
 
 def _render_brand_products(request, brand_name, section_label=None):
-    brand = _normalize_brand_name(brand_name)
+    brand = ProductCatalog.normalize_name(brand_name)
     section = section_label or f"{brand} Parts"
-    prod = (
-        Product.objects.filter(brand__iexact=brand, detail__icontains="part")
-        .order_by("name")
-    )
-    return render(request, "product_mngmnt/request.html", context={"prod": prod, "section": section})
+    prod = ProductCatalog.get_brand_parts(brand)
+    return _render_catalog_response(request, section, prod)
 
 
 def _render_consumable_products(request, brand_name, section_label=None):
-    brand = _normalize_brand_name(brand_name)
+    brand = ProductCatalog.normalize_name(brand_name)
     section = section_label or f"{brand} Consumables"
-    prod = (
-        Product.objects.filter(brand__iexact=brand)
-        .filter(
-            Q(detail__icontains="consumable")
-            | Q(detail__icontains="marking")
-            | Q(detail__icontains="pads")
-            | Q(detail__icontains="flat")
-        )
-        .order_by("name")
-    )
-    return render(request, "product_mngmnt/request.html", context={"prod": prod, "section": section})
+    prod = ProductCatalog.get_brand_consumables(brand)
+    return _render_catalog_response(request, section, prod)
+
+
+def _render_washer_controller_products(request, brand_name, section_label=None):
+    brand = ProductCatalog.normalize_name(brand_name)
+    section = section_label or f"{brand} Washer Controller"
+    prod = ProductCatalog.get_brand_washer_controllers(brand)
+    return _render_catalog_response(request, section, prod)
 
 def view_index(request):
     return render(request, 'product_mngmnt/index.html')
@@ -121,6 +205,13 @@ def view_home(request):
         consumable_name = _normalize_brand_name(request.GET.get("consumable", ""))
         if consumable_name:
             return _render_consumable_products(request, consumable_name, f"{consumable_name} Consumables")
+        washer_controller_name = _normalize_brand_name(
+            request.GET.get("washer_controller") or request.GET.get("controller", "")
+        )
+        if washer_controller_name:
+            return _render_washer_controller_products(
+                request, washer_controller_name, f"{washer_controller_name} Washer Controller"
+            )
         brand_name = _normalize_brand_name(request.GET.get("brand", ""))
         if brand_name:
             return _render_brand_products(request, brand_name, f"{brand_name} Parts")
@@ -297,20 +388,38 @@ def view_finishing_machines(request):
 
 
 
-# new
-# kitchen appliances
+# Washer Controller views
+def view_washer_controller(request):
+    if request.method == "GET":
+        brand = ProductCatalog.normalize_name(
+            request.GET.get("brand") or request.GET.get("washer_controller", "")
+        )
+        section = f"{brand} Washer Controller" if brand else "Washer Controller"
+        prod = (
+            ProductCatalog.get_brand_washer_controllers(brand)
+            if brand
+            else ProductCatalog.get_washer_controllers()
+        )
+        return _render_catalog_response(request, section, prod)
 
+
+# Kitchen appliances (backward compatibility)
 def view_kitchen_appliances(request):
-    if request.method == 'GET':
-        section = "Kitchen accessories"
-        prod=Product.objects.filter(detail__contains="kitchen acc")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+    if request.method == "GET":
+        brand = request.GET.get("brand")
+        prod = ProductCatalog.filter_by_keywords(
+            "kitchen acc", "kitchen appliance", "kitchen accessories", brand=brand
+        )
+        section = f"{brand} Kitchen Accessories" if brand else "Kitchen accessories"
+        return _render_catalog_response(request, section, prod)
+
 
 def view_kitchen_parts(request):
-    if request.method == 'GET':
-        section = "Kitchen Parts"
-        prod=Product.objects.filter(detail__contains="kitchen part")   
-        return render(request,'product_mngmnt/request.html',context={"prod":prod ,"section":section})
+    if request.method == "GET":
+        brand = request.GET.get("brand")
+        prod = ProductCatalog.filter_by_keywords("kitchen part", "kitchen parts", brand=brand)
+        section = f"{brand} Kitchen Parts" if brand else "Kitchen Parts"
+        return _render_catalog_response(request, section, prod)
 
 
 
