@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'product_mngmnt.context_processors.brand_menu',
                 'product_mngmnt.context_processors.consumable_menu',
+                'product_mngmnt.context_processors.washer_controller_menu',
             ],
         },
     },
