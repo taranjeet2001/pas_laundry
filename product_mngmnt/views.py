@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import login,logout,authenticate
 from product_mngmnt.forms import UserForm
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
 # Create your views here.
 
@@ -21,6 +22,22 @@ def _render_brand_products(request, brand_name, section_label=None):
     section = section_label or f"{brand} Parts"
     prod = (
         Product.objects.filter(brand__iexact=brand, detail__icontains="part")
+        .order_by("name")
+    )
+    return render(request, "product_mngmnt/request.html", context={"prod": prod, "section": section})
+
+
+def _render_consumable_products(request, brand_name, section_label=None):
+    brand = _normalize_brand_name(brand_name)
+    section = section_label or f"{brand} Consumables"
+    prod = (
+        Product.objects.filter(brand__iexact=brand)
+        .filter(
+            Q(detail__icontains="consumable")
+            | Q(detail__icontains="marking")
+            | Q(detail__icontains="pads")
+            | Q(detail__icontains="flat")
+        )
         .order_by("name")
     )
     return render(request, "product_mngmnt/request.html", context={"prod": prod, "section": section})
@@ -101,6 +118,9 @@ def view_forget(request):
 
 def view_home(request):
     if request.method == 'GET':
+        consumable_name = _normalize_brand_name(request.GET.get("consumable", ""))
+        if consumable_name:
+            return _render_consumable_products(request, consumable_name, f"{consumable_name} Consumables")
         brand_name = _normalize_brand_name(request.GET.get("brand", ""))
         if brand_name:
             return _render_brand_products(request, brand_name, f"{brand_name} Parts")

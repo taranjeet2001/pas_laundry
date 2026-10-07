@@ -119,11 +119,11 @@
             <i class="fa fa-caret-down"></i>
           </button>
           <div class="dropdown-content">
-            <a href="{% url 'flat_work_ironer' %}">Flat
-              work ironer</a>
-            <a href="{% url 'marking' %}">Marking</a>
-            <a href="{% url 'pads_and_covers' %}">Pads
-              and covers</a>
+            {% for brand in consumable_menu %}
+              <a href="{% url 'home' %}?consumable={{ brand|urlencode }}">{{ brand }}</a>
+            {% empty %}
+              <a href="{% url 'home' %}">No consumables available</a>
+            {% endfor %}
           </div>
         </div>
         
