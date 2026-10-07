@@ -48,7 +48,10 @@ urlpatterns = [
     path('desc/<int:pk>' , view_desc ),
 
 
-    # urls for kitchen appliances dropdown 
-    path('kitchen-accessories/' , view_kitchen_appliances , name='kitchenapp'),
-    path('kitchen-parts/' , view_kitchen_parts , name='kitchenparts'),
+    # urls for washer controller dropdown
+    path('washer-controller/', view_washer_controller, name='washercontroller'),
+
+    # urls for kitchen appliances dropdown (backward compatibility)
+    path('kitchen-accessories/', view_kitchen_appliances, name='kitchenapp'),
+    path('kitchen-parts/', view_kitchen_parts, name='kitchenparts'),
 ]
