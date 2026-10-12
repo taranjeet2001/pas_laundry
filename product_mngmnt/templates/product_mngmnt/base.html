@@ -139,7 +139,7 @@
             <a href="{% url 'finishingequipment' %}">Finishing Equipment</a>
             <a href="{% url 'markingmachines' %}">Marking Machines</a>
             <a href="{% url 'rollheatedironer' %}">Roll Heated Flat work ironer</a>
-            <a href="{% url 'washerextractor' %}">Washer Extractor</a>
+            <a href="{% url 'washerextractor' %}">Laundry Equipment Controller</a>
           </div>
         </div>
 
@@ -151,7 +151,7 @@
             {% for brand in washer_controller_menu %}
               <a href="{% url 'home' %}?washer_controller={{ brand|urlencode }}">{{ brand }}</a>
             {% empty %}
-              <a href="{% url 'home' %}">No washer controllers available</a>
+              <a href="{% url 'home' %}">No Laundry Equipment Controllers Available</a>
             {% endfor %}
           </div>
         </div>
